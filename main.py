@@ -5,12 +5,44 @@ Licensed under the GNU General Public License v2.0 or later @ Free Software Foun
 
 Copyright (C) 2022 - Ziad Ahmed aka. Insertx2k Dev (Mr.X)
 """
+
+
+# -------------------------
+# fixes for pyinstaller when showing console window when gui is launched.
+import sys
+
+if sys.platform.lower().startswith('win'):
+    import ctypes
+
+    def hideConsole():
+        """
+        Hides the console window in GUI mode. Necessary for frozen application, because
+        this application support both, command line processing AND GUI mode and theirfor
+        cannot be run via pythonw.exe.
+        """
+
+        whnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if whnd != 0:
+            ctypes.windll.user32.ShowWindow(whnd, 0)
+            # if you wanted to close the handles...
+            #ctypes.windll.kernel32.CloseHandle(whnd)
+
+    def showConsole():
+        """Unhides console window"""
+        whnd = ctypes.windll.kernel32.GetConsoleWindow()
+        if whnd != 0:
+            ctypes.windll.user32.ShowWindow(whnd, 1)
+
+# -------------------------
+
+
 from tkinter import *
 from tkinter import ttk, messagebox
 from wakeonlan import send_magic_packet
 from psutil import net_if_addrs
 from sys import argv, exit
 from colorama import Fore, Back, Style, init
+
 
 # initializing colorama.
 init(autoreset=True)
@@ -30,7 +62,7 @@ class MainWindow(Tk):
         self.configure(background='#333')
 
         try:
-            self.iconbitmap(".\\_MEI??????\\icon1.ico")
+            self.iconbitmap("icon1.ico")
         except Exception as icon_loading_error:
             messagebox.showerror("Window traceback", f"Couldn't load the iconbitmap for this window due to the exception\n{icon_loading_error}")
             pass
@@ -168,8 +200,12 @@ if __name__ == '__main__':
         network_interfaces_local_ips.append(net_if_addrs()[network_controller][1][1])
 
     if len(argv) == 1: # program started manually.
+        hideConsole() # disables the console window because the program is currently running in GUI mode.
         process = MainWindow().mainloop()
+        showConsole()
+        raise SystemExit(0)
     else: # program is running in command line mode.
+        # showConsole() # re-enables the console window because the program is currently running in command line mode.
         if str(argv[1]) == "--help":
             print_help_text()
             raise SystemExit(0)
