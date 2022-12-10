@@ -1,5 +1,5 @@
 """
-MegaWake - A wake on lan program for i486-based Computers (PCs running Windows and Linux Operating Systems)
+MegaWake - A wake on lan program for x86_64-based Computers (PCs running Windows and Linux Operating Systems)
 
 Licensed under the GNU General Public License v2.0 or later @ Free Software Foundation.
 
@@ -137,7 +137,7 @@ def print_greeting():
     Prints the greeting text.
     """
     print('=========================================================')
-    print("MegaWake for i486-based PCs (Windows and Linux Computers)")
+    print("MegaWake for x86_64-based PCs (Windows and Linux Computers)")
     print("Copyright (C) 2022 - Ziad Ahmed (Mr.X) aka. Insertx2k Dev")
     print('', end='\n')
     print("This program is a free and open-source product, which means, you are allowed to redistribute it or modify it under the terms of the GNU General Public License v2.0 or later @ Free Software Foundation")
